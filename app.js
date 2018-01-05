@@ -4,10 +4,35 @@ var favicon = require('serve-favicon');
 var logger = require('morgan');
 var bodyParser = require('body-parser');
 
+var mongoose = require('mongoose');
+var passport = require('passport');
+var expressValidator = require('express-validator');
+
+
+/**
+ * Routes.
+ */
 var index = require('./routes/index');
 var users = require('./routes/users');
 
+/**
+ * API information
+ */
+var secrets = require('./config/secrets');
+
+/**
+ * Create Express server.
+ */
 var app = express();
+
+/**
+ * Connect to MongoDB.
+ */
+mongoose.connect(secrets.db);
+mongoose.connection.on('error', function() {
+  console.log('MongoDB Connection Error. Please make sure that MongoDB is running.');
+  process.exit(1);
+});
 
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
@@ -18,6 +43,9 @@ app.set('view engine', 'pug');
 app.use(logger('dev'));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
+app.use(expressValidator());
+app.use(passport.initialize());
+app.use(passport.session());
 app.use(express.static(path.join(__dirname, 'public')));
 
 app.use('/', index);
