@@ -4,9 +4,9 @@
 
 module.exports = {
 
-  gatewayServer: '0.0.0.0',
-  gatewayPort: '9000',
-  interceptorServer: '0.0.0.0',
+  checkerServer: '127.0.0.1',
+  checkerPort: '1000',
+  interceptorServer: '127.0.0.1',
   interceptorPort: '5000'
 
-}
+};
