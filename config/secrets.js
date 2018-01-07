@@ -21,7 +21,7 @@
 
 module.exports = {
 
-  db: process.env.MONGODB || process.env.MONGOLAB_URI || 'mongodb://localhost:27017/test',
+  db: process.env.MONGODB || process.env.MONGOLAB_URI || 'mongodb://localhost:27017/nexus-users',
   sessionSecret: process.env.SESSION_SECRET || 'secret',
   issuerSecret: process.env.ISSUER_SECRET || 'N-Checker',
 
