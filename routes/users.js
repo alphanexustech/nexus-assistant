@@ -1,10 +1,11 @@
 var express = require('express');
 var router = express.Router();
-var passport = require('passport');
 var axios = require('axios');
 var User = require('../models/User');
-var secrets = require('../config/secrets');
 var microservices = require('../config/microservices');
+
+/* Passport */
+var passport = require('passport');
 var passportConf = require('../config/passport');
 
 /* URL Patterns */
@@ -148,7 +149,6 @@ router.post('/signup', function(req, res, next) {
 router.delete('/account/delete', passportConf.isAuthenticated, function(req, res, next) {
   var token = req.headers.authorization;
   var userID = authentication.checkToken(token)[1]['sub']
-  console.log(token, userID);
   User.findOne({ _id: userID  }, function(err, existingUser) {
     if (existingUser) {
       User.remove({ _id: userID }, function(err) {
