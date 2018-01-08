@@ -41,17 +41,26 @@ router.post('/analyze_emotion_set', passportConf.isAuthenticated, function(req, 
 
 /**
  * GET /
- * N-Interceptor method to retrieve all prior run analyses.
+ * N-Interceptor method to retrieve all prior run analyses for a user based on the token.
  * Specifies params:
     collection (string)
     page (number)
     countPerPage (number)
  */
 router.get('/analyses/:collection/:page/:countPerPage', passportConf.isAuthenticated, function(req, res, next) {
+  var token = req.headers.authorization;
   var collection = req.params.collection,
       page = req.params.page,
       countPerPage = req.params.countPerPage;
-  axios.get(interceptorURL + '/scorer/analyses/' + collection + '/' + page  + '/' + countPerPage)
+
+  var config = {
+    headers: {
+      "Authorization": token // Set authorization header
+    }
+  }
+  axios.get(
+    interceptorURL + '/scorer/analyses/' + collection + '/' + page  + '/' + countPerPage,
+    config)
   .then(function (response) {
     return res.send({
       "data": response.data
@@ -65,14 +74,23 @@ router.get('/analyses/:collection/:page/:countPerPage', passportConf.isAuthentic
 
 /**
  * GET /
- * N-Interceptor method to retrieve single prior run analysis.
+ * N-Interceptor method to retrieve single prior run analysis for a user based on the token.
     collection (string)
     id (string-ed hash)
  */
 router.get('/analyses/:collection/:id', passportConf.isAuthenticated, function(req, res, next) {
+  var token = req.headers.authorization;
   var collection = req.params.collection,
       id = req.params.id;
-  axios.get(interceptorURL + '/scorer/analyses/' + collection + '/' + id)
+
+  var config = {
+    headers: {
+      "Authorization": token // Set authorization header
+    }
+  }
+  axios.get(
+    interceptorURL + '/scorer/analyses/' + collection + '/' + id,
+    config)
   .then(function (response) {
     return res.send({
       "data": response.data
