@@ -1,6 +1,6 @@
 {
   "name": "nexus-assistant",
-  "version": "1.2.0",
+  "version": "1.2.1",
   "description": "Front-end router",
   "repository": {
     "type": "git",
@@ -13,6 +13,7 @@
     "axios": "^0.17.1",
     "bcryptjs": "^2.4.3",
     "body-parser": "~1.18.2",
+    "cors": "^2.8.4",
     "debug": "~2.6.9",
     "express": "~4.15.5",
     "express-validator": "^4.3.0",

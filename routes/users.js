@@ -60,7 +60,9 @@ router.post('/login', function(req, res, next) {
         axios.post(checkerURL + '/authentication/sign', payload)
         .then(function (response) {
           return res.send({
-            "accessToken": response.data
+            "accessToken": response.data,
+            "userID": user.id,
+            "username": user.username
           })
         })
         .catch(function (error) {
@@ -129,7 +131,9 @@ router.post('/signup', function(req, res, next) {
           axios.post(checkerURL + '/authentication/sign', payload)
           .then(function (response) {
             return res.send({
-              "accessToken": response.data
+              "accessToken": response.data,
+              "userID": user.id,
+              "username": user.username
             })
           })
           .catch(function (error) {
