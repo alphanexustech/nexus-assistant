@@ -27,6 +27,12 @@ var secrets = require('./config/secrets');
 var app = express();
 
 /**
+ * CORS-enabled
+ */
+var cors = require('cors')
+
+app.use(cors())
+/**
  * Connect to MongoDB.
  */
 mongoose.connect(secrets.db);
