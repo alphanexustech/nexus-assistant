@@ -1,0 +1,32 @@
+language: node_js
+sudo: false
+services:
+- mongodb
+node_js:
+- '8'
+env:
+- NODE_ENV=travis
+deploy:
+- provider: s3
+  access_key_id: AKIAJVBBNDHYSNFIIJVA
+  secret_access_key: &1
+    secure: p4Tends1aL8mDpnqhZ5bexaFfa/H1RsKvKsCwYxaoyM40ZKiQzG8zujsFgyl1ksGTU08ZSJv/w1AlkE1kIjndovzEowsntu/r6r0ZZDNwQ26UTBPGP6lPGINk6byf4w/iDMmU9dtQbz4WTfWzjD72/nm6hXfNo6DN3ugg13HAU/gFHX01TNDe62VgS7Rb16PhzI6vNB5rr3nhyz16TmS/9Cl74IjTo8lz73VpYNGaOoajKqASouYFUUbfl//Lr0lptflxAXEcUvkuZbv+A/rCxw0nGtdD8jCLX7v1pJXaQlqdysHJHiumiu+Ep+zXIhP9Est2SwpcfuQpINqkKWnv/2GHNJgFf84oFmfE4Bx/lLozPBjCwKG1FTBeCx3Lv9j9yleBXFYckMsRsZk7dLbjnvTKR2IooQaQ7j3fuVlIHaSJR/LimMPNgXZwmN1oE2510Ci+Oeg6EX9/jRC+JDo7QlTREqxsAVNUx0DQctAYcjfnurQNh/F++U6QPm91JE83OfsrB8MtFbQfeRgsFSwdSt/lkL/TILgSdniQK+NW+cYmWoc0kXNIiDA1qwmOQsNws/CqH4JPLoNm4nKHc7cLrEL24FaYttwZ3T9E6mKXwc6snWDxBD94OFbKg9VtAHAw7NClhw1SR1LIU7umV98qKfHRd6pjVJPq1/F6Y6UPO4=
+  local_dir: dpl_cd_upload
+  skip_cleanup: true
+  on: &2
+    repo: alphanexustech/nexus-assistant
+    branch: develop
+  bucket: nexus-assistant-bucket
+- provider: codedeploy
+  access_key_id: AKIAJVBBNDHYSNFIIJVA
+  secret_access_key: *1
+  bucket: nexus-assistant-bucket
+  key: latest-lg.zip
+  bundle_type: zip
+  application: nexus-assistant
+  deployment_group: affect-nexus-group
+  on: *2
+before_deploy:
+- zip -r latest-lg bin/* config/* models/* public/* routes/* scripts/* views/* .gitignore .travis.yml app.js appspec.yml LICENSE package-lock.json package.json README.md
+- mkdir -p dpl_cd_upload
+- mv latest-lg.zip dpl_cd_upload/latest-lg.zip
