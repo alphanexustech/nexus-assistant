@@ -28,13 +28,13 @@ passport.use(new LocalStrategy(
       return done(err);
     }
     if (!user) {
-      return done(null, false, { message: 'Sorry, please try again.'});
+      return done(null, false, { message: 'Sorry, the username and password do not match.'});
     } else {
       user.comparePassword(password, function(err, isMatch) {
         if (isMatch) {
           return done(null, user);
         } else {
-          return done(null, false, { message: 'Sorry, please try again.' });
+          return done(null, false, { message: 'Sorry, the username and password do not match.'});
         }
       });
     }
