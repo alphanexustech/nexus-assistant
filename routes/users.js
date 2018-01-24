@@ -29,7 +29,7 @@ router.post('/login', function(req, res, next) {
   req.assert('username', 'Please enter your username.').notEmpty();
   req.assert('password', 'Please enter your password.').notEmpty();
 
-  var errors = req.validationErrors();
+  var errors = req.validationErrors(true);
 
   if (errors) {
     return res.status(401).send({
@@ -88,14 +88,16 @@ router.get('/logout', function(req, res, next) {
  * Create a new local account.
  */
 router.post('/signup', function(req, res, next) {
-  req.assert('email', 'The E-mail is not valid').isEmail();
-  req.assert('username', 'The username must be at least 3 characters long').len(3);
-  req.assert('password', 'The password must be at least 4 characters long').len(4);
-  req.assert('confirmPassword', 'The confirmation password must match the password').equals(req.body.password);
+  req.assert('email', 'The E-mail is not valid.').isEmail();
+  req.assert('username', 'The username must be at least 3 characters long.').len(3);
+  req.assert('username', 'Whoa dude, that username must be shorter than 64 characters.').isLength({ max: 64 });
+  req.assert('password', 'The password must be at least 4 characters long.').len(4);
+  req.assert('confirmPassword', 'The confirmation password must match the password.').equals(req.body.password);
 
-  var errors = req.validationErrors();
+  var errors = req.validationErrors(true);
 
   if (errors) {
+    console.log(errors);
     return res.status(401).send({
       'status': 'Unauthorized',
       'errors': errors
@@ -112,7 +114,7 @@ router.post('/signup', function(req, res, next) {
     if (existingUser) {
       return res.status(401).send({
         'status': 'Unauthorized',
-        'errors': 'Sorry, an account with that username exists.'
+        'errors': 'Sorry, that username is already in use.'
       });
     }
     user.save(function(err) {
