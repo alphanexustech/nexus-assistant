@@ -23,10 +23,7 @@ var userSchema = new mongoose.Schema({
 	},
   email: { type: String, lowercase: true },
   password: String,
-  tokens: Array,
-  profile: {
-    name: { type: String, default: '' },
-  },
+  tokens: Array, // <-- This is for the future
   updated: {
 		type: Date
 	},
@@ -40,7 +37,20 @@ var userSchema = new mongoose.Schema({
 	},
 	resetPasswordExpires: {
 		type: Date
-	}
+	},
+  /* For user preferences */
+  affectiveData: {
+    type: String,
+    default: "0"
+  },
+  emailSub: {
+    type: String,
+    default: "0"
+  },
+  interfaceComplexity: {
+    type: String,
+    default: "0"
+  }
 });
 
 /**

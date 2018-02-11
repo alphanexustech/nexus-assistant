@@ -62,7 +62,8 @@ router.post('/login', function(req, res, next) {
           return res.send({
             "accessToken": response.data,
             "userID": user.id,
-            "username": user.username
+            "username": user.username,
+            "interfaceComplexity": user.interfaceComplexity
           })
         })
         .catch(function (error) {
@@ -149,7 +150,100 @@ router.post('/signup', function(req, res, next) {
 });
 
 /**
- * POST /account/delete
+ * GET /account
+ * Get a user account based on a JWT token in the header.
+ */
+router.get('/account', passportConf.isAuthenticated, function(req, res, next) {
+  var token = req.headers.authorization;
+  var userID = authentication.checkToken(token)[1]['sub']
+  User.findOne({ _id: userID  }, function(err, existingUser) {
+    if (existingUser) {
+        // Nullify the password
+        existingUser['password'] = null;
+        return res.status(200).send({
+          'status': 'OK',
+          'user': existingUser
+        });
+    } else {
+      return res.status(404).send({
+        'status': 'Not Found'
+      });
+    }
+  });
+});
+
+/**
+ * PATCH /account
+ * Patch an updated user account with JWT token in the header, and an incomplete object.
+ */
+router.patch('/account', passportConf.isAuthenticated, function(req, res, next) {
+  var token = req.headers.authorization;
+  var userID = authentication.checkToken(token)[1]['sub']
+  User.findOne({ _id: userID  }, function(err, existingUser) {
+    if (err) {
+      return res.status(400).send({
+        'status': 'Bad Request',
+        'errors': 'Something went wrong. We\'ll fix it when we find it.'
+      });
+    } else if (existingUser) {
+
+      var password = req.body.newPassword;
+      var confirmPassword = req.body.confirmPassword;
+      if (password && confirmPassword) {
+        if (password.length > 0 || confirmPassword.length > 0) {
+          req.assert('newPassword', 'The password must be at least 4 characters long.').len(4);
+          req.assert('confirmPassword', 'The confirmation password must match the password.').equals(req.body.newPassword);
+          existingUser.password = req.body.newPassword
+        }
+      }
+      req.assert('email', 'The E-mail is not valid.').isEmail();
+
+      var errors = req.validationErrors(true);
+
+      if (errors) {
+        console.log(errors);
+        return res.status(400).send({
+          'status': 'Bad Request',
+          'errors': errors
+        });
+      }
+
+      // Validation of these types happens within the Mongoose User Model
+      existingUser.firstName = req.body.firstName
+      existingUser.lastName = req.body.lastName
+      existingUser.displayName = req.body.displayName
+      existingUser.affectiveData = req.body.affectiveData
+      existingUser.emailSub = req.body.emailSub
+      existingUser.interfaceComplexity = req.body.interfaceComplexity
+      existingUser.email = req.body.email
+
+      console.log(req.body.email, 'req.body.email');
+
+      existingUser.save(function (err, updatedUser) {
+        if (err) {
+          return res.status(400).send({
+            'status': 'Bad Request',
+            'errors': 'Something went wrong. We\'ll fix it when we find it.'
+          });
+        } else {
+          return res.status(200).send({
+            'status': 'OK',
+            'user': existingUser
+          });
+        }
+      });
+
+
+    } else {
+      return res.status(404).send({
+        'status': 'Not Found'
+      });
+    }
+  });
+});
+
+/**
+ * DELETE /account/delete
  * Delete user account.
  */
 router.delete('/account/delete', passportConf.isAuthenticated, function(req, res, next) {
@@ -162,8 +256,10 @@ router.delete('/account/delete', passportConf.isAuthenticated, function(req, res
           return next(err);
         } else {
           req.logout();
-          console.log('Your account has been deleted.');
-          res.redirect('/');
+          return res.status(200).send({
+            'status': 'OK',
+            'message': 'Your account was successfully deleted.'
+          });
         }
       });
     } else {
