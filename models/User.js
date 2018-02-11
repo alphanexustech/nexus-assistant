@@ -15,6 +15,7 @@ var userSchema = new mongoose.Schema({
   username: {
     type: String,
     trim: true,
+    default: '',
     unique: true
   },
 	displayName: {
