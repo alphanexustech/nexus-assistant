@@ -9,7 +9,7 @@ var passport = require('passport');
 var passportConf = require('../config/passport');
 
 /* URL Patterns */
-var checkerURL = 'http://' + microservices.checkerServer + ':' + microservices.checkerPort;
+var checkerURL = microservices.protocol + '://' + microservices.checkerServer + ':' + microservices.checkerPort;
 
 /**
  * Internal Routes.
