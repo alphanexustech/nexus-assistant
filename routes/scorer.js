@@ -8,7 +8,7 @@ var passport = require('passport');
 var passportConf = require('../config/passport');
 
 /* URL Patterns */
-var interceptorURL = 'http://' + microservices.interceptorServer + ':' + microservices.interceptorPort;
+var interceptorURL = microservices.protocol + '://' + microservices.interceptorServer + ':' + microservices.interceptorPort;
 
 /**
  * Internal Routes.
