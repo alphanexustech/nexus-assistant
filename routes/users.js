@@ -50,7 +50,7 @@ router.post('/login', function(req, res, next) {
       if (err) {
         return next(err);
       } else {
-        // Create a JWT token (via Checker) so users don't have to ask the assistant to check login.
+        // Create a JWT token (via Checker) so users don't have to ask the assistant to check login
         var payload = {
           "username": user.username,
           "sub": user.id,
@@ -63,7 +63,8 @@ router.post('/login', function(req, res, next) {
             "accessToken": response.data,
             "userID": user.id,
             "username": user.username,
-            "interfaceComplexity": user.interfaceComplexity
+            "interfaceComplexity": user.interfaceComplexity,
+            "displayName": user.displayName
           })
         })
         .catch(function (error) {
