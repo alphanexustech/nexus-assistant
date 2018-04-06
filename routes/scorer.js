@@ -129,7 +129,7 @@ router.get('/analyses/:collection/:id', passportConf.isAuthenticated, function(r
 
 /**
  *
- *** More flexible methods for the future that support more than affect.
+ *** More flexible methods for the future that support more than affect analyses.
  *
  */
 
@@ -142,7 +142,7 @@ router.get('/analyses/:collection/:id', passportConf.isAuthenticated, function(r
     page (number)
     countPerPage (number)
  */
-router.get('/analyses/:database/:collection/:page/:countPerPage', passportConf.isAuthenticated, function(req, res, next) {
+router.get('/:database/analyses/:collection/:page/:countPerPage', passportConf.isAuthenticated, function(req, res, next) {
   var token = req.headers.authorization;
   var database = req.params.database,
       collection = req.params.collection,
@@ -155,7 +155,7 @@ router.get('/analyses/:database/:collection/:page/:countPerPage', passportConf.i
     }
   }
   axios.get(
-    interceptorURL + '/scorer/analyses/' + database + '/' + collection + '/' + page  + '/' + countPerPage,
+    interceptorURL + '/scorer/' + database + '/analyses/' + collection + '/' + page  + '/' + countPerPage,
     config)
   .then(function (response) {
     return res.send({
@@ -174,7 +174,7 @@ router.get('/analyses/:database/:collection/:page/:countPerPage', passportConf.i
     collection (string)
     id (string-ed hash)
  */
-router.get('/analyses/:database/:collection/:id', passportConf.isAuthenticated, function(req, res, next) {
+router.get('/:database/analyses/:collection/:id', passportConf.isAuthenticated, function(req, res, next) {
   var token = req.headers.authorization;
   var database = req.params.database,
       collection = req.params.collection,
@@ -186,7 +186,7 @@ router.get('/analyses/:database/:collection/:id', passportConf.isAuthenticated, 
     }
   }
   axios.get(
-    interceptorURL + '/scorer/analyses/' + database + '/' + collection + '/' + id,
+    interceptorURL + '/scorer/' + database + '/analyses/' + collection + '/' + id,
     config)
   .then(function (response) {
     return res.send({
