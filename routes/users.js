@@ -190,6 +190,8 @@ router.patch('/account', passportConf.isAuthenticated, function(req, res, next) 
 
       var password = req.body.newPassword;
       var confirmPassword = req.body.confirmPassword;
+      var affectiveData = req.body.affectiveData;
+      var sociologicalData = req.body.sociologicalData;
       if (password && confirmPassword) {
         if (password.length > 0 || confirmPassword.length > 0) {
           req.assert('newPassword', 'The password must be at least 4 characters long.').len(4);
@@ -197,6 +199,14 @@ router.patch('/account', passportConf.isAuthenticated, function(req, res, next) 
           existingUser.password = req.body.newPassword
         }
       }
+      // Check data preferences
+      if (affectiveData) {
+        existingUser.affectiveData = req.body.affectiveData
+      }
+      if (sociologicalData) {
+        existingUser.sociologicalData = req.body.sociologicalData
+      }
+
       req.assert('email', 'The E-mail is not valid.').isEmail();
 
       var errors = req.validationErrors(true);
@@ -213,12 +223,11 @@ router.patch('/account', passportConf.isAuthenticated, function(req, res, next) 
       existingUser.firstName = req.body.firstName
       existingUser.lastName = req.body.lastName
       existingUser.displayName = req.body.displayName
-      existingUser.affectiveData = req.body.affectiveData
       existingUser.emailSub = req.body.emailSub
       existingUser.interfaceComplexity = req.body.interfaceComplexity
       existingUser.email = req.body.email
 
-      console.log(req.body.email, 'req.body.email');
+      // console.log(req.body.email, 'req.body.email');
 
       existingUser.save(function (err, updatedUser) {
         if (err) {

@@ -45,6 +45,10 @@ var userSchema = new mongoose.Schema({
     type: String,
     default: "0"
   },
+  sociologicalData: {
+    type: String,
+    default: "0"
+  },
   emailSub: {
     type: String,
     default: "0"
