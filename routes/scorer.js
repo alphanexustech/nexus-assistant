@@ -64,6 +64,30 @@ router.post('/analyze_role_set', passportConf.isAuthenticated, function(req, res
 });
 
 /**
+ * POST /
+ * N-Interceptor method to ask N-Scorer to score based on the body.
+ */
+router.post('/analyze_percept_set', passportConf.isAuthenticated, function(req, res, next) {
+  var token = req.headers.authorization;
+  var userID = authentication.checkToken(token)[1]['sub']
+  var username = authentication.checkToken(token)[1]['username']
+  var payload = req.body // Pass the body as a new payload for a new request
+  // But, add to the payload information from the JWT token.
+  payload['id'] = userID,
+  payload['username'] = username,
+  axios.post(interceptorURL + '/scorer/analyze_percept_set/', payload)
+  .then(function (response) {
+    return res.send({
+      "data": response.data
+    })
+  })
+  .catch(function (error) {
+    console.log(error);
+    return res.send(error.data)
+  });
+});
+
+/**
  * GET /
  * N-Interceptor method to retrieve all prior run analyses for a user based on the token.
  * Specifies params:
